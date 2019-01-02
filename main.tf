@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "bucket_terraform_state" {
 
 
 resource "aws_dynamodb_table" "terraform_locks" {
-  name = "terraform-locks"
+  name = "${var.prefix_with_product ? "${var.product}-" : ""}terraform-locks"
 
   read_capacity = 1
   write_capacity = 1

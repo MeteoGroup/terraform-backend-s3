@@ -13,6 +13,7 @@ variable "account" {
 variable "tags" {
   description = "AWS tags to add to the created backend resources"
 
-  type = "map"
+  type    = map(string)
   default = {}
 }
+

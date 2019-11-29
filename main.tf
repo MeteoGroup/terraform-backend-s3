@@ -9,19 +9,20 @@ resource "aws_s3_bucket" "terraform_state" {
     prevent_destroy = true
   }
 
-  tags = "${var.tags}"
+  tags = var.tags
 }
 
 resource "aws_s3_bucket_policy" "terraform_state" {
-  bucket = "${aws_s3_bucket.terraform_state.id}"
-  policy = "${data.aws_iam_policy_document.bucket_terraform_state.json}"
+  bucket = aws_s3_bucket.terraform_state.id
+  policy = data.aws_iam_policy_document.bucket_terraform_state.json
 }
+
 data "aws_iam_policy_document" "bucket_terraform_state" {
   statement {
-    sid = "protect_bucket"
-    effect = "Deny"
-    resources = ["${aws_s3_bucket.terraform_state.arn}"]
-    actions   = [
+    sid       = "protect_bucket"
+    effect    = "Deny"
+    resources = [aws_s3_bucket.terraform_state.arn]
+    actions = [
       "s3:DeleteBucket",
       "s3:DeleteBucketPolicy",
     ]
@@ -32,11 +33,10 @@ data "aws_iam_policy_document" "bucket_terraform_state" {
   }
 }
 
-
 resource "aws_dynamodb_table" "terraform_locks" {
   name = "${var.prefix_with_product ? "${var.product}-" : ""}terraform-locks"
 
-  read_capacity = 1
+  read_capacity  = 1
   write_capacity = 1
 
   hash_key = "LockID"
@@ -45,5 +45,6 @@ resource "aws_dynamodb_table" "terraform_locks" {
     type = "S"
   }
 
-  tags = "${var.tags}"
+  tags = var.tags
 }
+
